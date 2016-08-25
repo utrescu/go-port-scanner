@@ -5,14 +5,18 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"os"
 	"strconv"
 	"sync"
 	"time"
 )
 
-var wg sync.WaitGroup
-var portNumber int
-var timeout string
+var (
+	wg         sync.WaitGroup
+	portNumber int
+	timeout    string
+	tag        string
+)
 
 /*
 IPList: Obtenir la llista d'IPs
@@ -64,14 +68,12 @@ func rebreResultats(outChan <-chan string, resultChan chan<- []string) {
 	resultChan <- alives
 }
 
-func (n *IPList) comprovaVius(port int) {
+func (n *IPList) comprovaHostsVius(port int) {
 
 	outChan := make(chan string, len(n.ip))
 	resultChan := make(chan []string)
 
 	numHosts := len(n.ip)
-
-	fmt.Println("Hosts ", numHosts)
 
 	wg.Add(numHosts)
 
@@ -97,7 +99,6 @@ func estaViu(ip net.IP, port int, outChan chan<- string) {
 
 	conn, err := net.DialTimeout("tcp", connexio, timeoutDuration)
 	if err == nil {
-		fmt.Println("Obert " + ip.String())
 		outChan <- ip.String()
 		conn.Close()
 	}
@@ -108,6 +109,34 @@ func init() {
 	flag.IntVar(&portNumber, "port", 22, "Port to scan")
 	flag.IntVar(&portNumber, "p", 22, "Port to scan")
 	flag.StringVar(&timeout, "timeout", "1000ms", "Temps d'espera")
+	flag.StringVar(&tag, "tag", "", "Etiqueta a posar i nom del fitxer")
+}
+
+func outputAnsibleFormat(listIPs IPList) {
+
+	file, err := os.Create(tag)
+	if err != nil {
+		log.Fatal("Error creant el fitxer", err)
+	}
+	defer file.Close()
+
+	fmt.Fprintf(file, "["+tag+"]\n")
+	fmt.Println("[" + tag + "]")
+
+	for i := range listIPs.alive {
+		fmt.Fprintf(file, listIPs.alive[i]+"\n")
+		fmt.Println(listIPs.alive[i])
+	}
+}
+
+func outputArrayFormat(listIPs IPList, scanDuration time.Duration) {
+	fmt.Println("Màquines")
+	fmt.Println("---------------")
+	for i := range listIPs.alive {
+		fmt.Println(listIPs.alive[i])
+	}
+
+	fmt.Printf("\ndurada: %v\n\n", scanDuration)
 }
 
 func main() {
@@ -138,10 +167,14 @@ func main() {
 
 	startTime := time.Now()
 
-	listIPs.comprovaVius(portNumber)
-	fmt.Println(listIPs.alive)
+	listIPs.comprovaHostsVius(portNumber)
 
 	scanDuration := time.Since(startTime)
-	fmt.Printf("\nFet en %v\n", scanDuration)
+	// Canviar sortida si hi ha 'tag'
+	if len(tag) > 0 {
+		outputAnsibleFormat(listIPs)
+	} else {
+		outputArrayFormat(listIPs, scanDuration)
+	}
 
 }
