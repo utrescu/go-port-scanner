@@ -43,23 +43,6 @@ El temps d'espera per establir connexions s'ha definit per defecte a 1 segon per
     
     durada: 274.959328ms
 
-El programa l'he fet per generar inventaris per Ansible i per això si en la generació s'hi posa el paràmetre 'tag' es genera un fitxer d'inventari per Ansible amb el mateix nom de l'etiqueta: 
-
-    $ go run list-ip.go -timeout 250ms -tag alumnes 192.168.50.0/24
-    [alumnes]
-    192.168.50.12
-    192.168.50.16
-    192.168.50.23
-
-En aquest cas a més de generar l'inventari per pantalla també crea un fitxer amb el mateix nom:
-
-    $ ls                                   
-    alumnes  list-ip.go  README.md
-    $ cat alumnes
-    [alumnes]
-    192.168.50.12
-    192.168.50.16
-    192.168.50.23
 
 Compilar
 ----------
