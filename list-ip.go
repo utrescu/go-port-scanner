@@ -50,7 +50,7 @@ func main() {
 
 	startTime := time.Now()
 
-	resultats := listIP.Comprova(rangs, portNumber, timeout)
+	resultats := listIP.Check(rangs, portNumber, timeout)
 
 	scanDuration := time.Since(startTime)
 	outputFormat(resultats, scanDuration)
