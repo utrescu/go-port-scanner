@@ -13,6 +13,27 @@ La comanda bàsica consisteix en especificar la xarxa a escannejar en format CID
 
     durada: 1.028944403s
 
+També funciona posant IP:
+
+    $ go run list-ip.go 192.168.1.2
+    Màquines
+    ---------------
+    192.168.1.2
+
+    durada: 830.384µs
+
+Es pot fer posant les xarxes o IP que calgui com a paràmetres: 
+
+    $ go run list-ip.go 192.168.0.0/24 192.168.1.0/24 192.168.8.1
+    Màquines
+    ---------------
+    192.168.0.2
+    192.168.1.2
+
+    durada: 1.039590773s
+
+### Definir el port 
+
 Per defecte escanneja el port 22 però amb el paràmetre *-p* o *-port* es pot especificar un altre port. Per exemple per veure quines màquines de la xarxa 192.168.9.0 tenen el port 80 (http) obert:
 
     $ go run list-ip.go -p 80 192.168.1.0/24 
@@ -23,15 +44,7 @@ Per defecte escanneja el port 22 però amb el paràmetre *-p* o *-port* es pot e
 
     durada: 1.023340366s
 
-Es pot fer posant les xarxes que calgui com a paràmetres: 
-
-    $ go run list-ip.go -p 80 192.168.0.0/24 192.168.1.0/24
-    Màquines
-    ---------------
-    192.168.0.2
-    192.168.1.2
-
-    durada: 1.039590773s
+### Definir el temps d'espera
 
 El temps d'espera per establir connexions s'ha definit per defecte a 1 segon però és pot canviar per un altre valor amb *-timeout*. Per exemple 200 milisegons: 
 
