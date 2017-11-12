@@ -9,22 +9,29 @@ import (
 	"github.com/utrescu/listIP"
 )
 
+const maquines = "Màquines"
+
 var (
 	portNumber int
 	timeout    string
-	debug      *bool
+	debug      bool
+	header     string
 )
 
 func init() {
 	flag.IntVar(&portNumber, "port", 22, "Port to scan")
 	flag.IntVar(&portNumber, "p", 22, "Port to scan")
 	flag.StringVar(&timeout, "timeout", "1000ms", "timeout")
-	debug = flag.Bool("v", false, "Show failed connections")
+	flag.BoolVar(&debug, "v", false, "Show failed connections")
+	flag.StringVar(&header, "h", maquines, "Header Text")
+	flag.StringVar(&header, "header", maquines, "Header Text")
 }
 
 func outputFormat(title string, resultats []string) {
 	fmt.Println(title)
-	fmt.Println("---------------")
+	if header == maquines {
+		fmt.Println("--------------------")
+	}
 	for i := range resultats {
 		fmt.Println(resultats[i])
 	}
@@ -52,10 +59,13 @@ func main() {
 
 	resultats, errors := listIP.Check(rangs, portNumber, timeout)
 
-	if *debug {
+	if debug {
 		outputFormat("errors", errors)
 	}
-	outputFormat("resultat", resultats)
+	outputFormat(header, resultats)
 	scanDuration := time.Since(startTime)
-	fmt.Printf("\ndurada: %v\n\n", scanDuration)
+
+	if header == maquines {
+		fmt.Printf("\ndurada: %v\n\n", scanDuration)
+	}
 }
