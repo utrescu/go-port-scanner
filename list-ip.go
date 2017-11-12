@@ -12,22 +12,22 @@ import (
 var (
 	portNumber int
 	timeout    string
+	debug      *bool
 )
 
 func init() {
 	flag.IntVar(&portNumber, "port", 22, "Port to scan")
 	flag.IntVar(&portNumber, "p", 22, "Port to scan")
-	flag.StringVar(&timeout, "timeout", "1000ms", "Temps d'espera")
+	flag.StringVar(&timeout, "timeout", "1000ms", "timeout")
+	debug = flag.Bool("v", false, "Show failed connections")
 }
 
-func outputFormat(resultats []string, scanDuration time.Duration) {
-	fmt.Println("Màquines")
+func outputFormat(title string, resultats []string) {
+	fmt.Println(title)
 	fmt.Println("---------------")
 	for i := range resultats {
 		fmt.Println(resultats[i])
 	}
-
-	fmt.Printf("\ndurada: %v\n\n", scanDuration)
 }
 
 func main() {
@@ -50,8 +50,12 @@ func main() {
 
 	startTime := time.Now()
 
-	resultats := listIP.Check(rangs, portNumber, timeout)
+	resultats, errors := listIP.Check(rangs, portNumber, timeout)
 
+	if *debug {
+		outputFormat("errors", errors)
+	}
+	outputFormat("resultat", resultats)
 	scanDuration := time.Since(startTime)
-	outputFormat(resultats, scanDuration)
+	fmt.Printf("\ndurada: %v\n\n", scanDuration)
 }
