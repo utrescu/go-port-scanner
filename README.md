@@ -1,10 +1,10 @@
-Escanner de ports oberts
+Escanner de port obert
 =============================
 Es tracta d'un programa que comprova quantes màquines en una xarxa o xarxes tenen un determinat port obert
 
 Execució
 ----------------
-La comanda bàsica consisteix en especificar la xarxa a escannejar en format CIDR: 
+La comanda bàsica consisteix en especificar la xarxa a escannejar en format CIDR:
 
     $ go run list-ip.go 192.168.1.0/24
     Màquines
@@ -61,13 +61,24 @@ Compilar
 ----------
 En Go els programes es poden compilar per generar executables nadius del sistema:
 
-    $ go build list-ip.go 
+    $ go build list-ip.go
     $ ls
     list-ip  list-ip.go  README.md
-    $ ./list-ip 
-    Hosts  254
-    Obert 192.168.88.1
-    [192.168.88.1]
+    $ ./list-ip 192.168.9.0/24
+    Màquines
+    --------------------
+    192.168.9.22
+    192.168.9.34
+    192.168.9.75
+    192.168.9.59
+    192.168.9.119
+    192.168.9.171
+    192.168.9.199
+    192.168.9.198
+    192.168.9.183
+    192.168.9.232
+    192.168.9.252
 
-    Fet en 1.003207812s
+    durada: 2.404897616s
+
 

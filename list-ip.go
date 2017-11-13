@@ -13,6 +13,7 @@ const maquines = "Màquines"
 
 var (
 	portNumber int
+	parallel   int
 	timeout    string
 	debug      bool
 	header     string
@@ -21,7 +22,8 @@ var (
 func init() {
 	flag.IntVar(&portNumber, "port", 22, "Port to scan")
 	flag.IntVar(&portNumber, "p", 22, "Port to scan")
-	flag.StringVar(&timeout, "timeout", "1000ms", "timeout")
+	flag.IntVar(&parallel, "parallel", 25, "Simultaneous connections")
+	flag.StringVar(&timeout, "timeout", "200ms", "timeout")
 	flag.BoolVar(&debug, "v", false, "Show failed connections")
 	flag.StringVar(&header, "h", maquines, "Header Text")
 	flag.StringVar(&header, "header", maquines, "Header Text")
@@ -57,7 +59,7 @@ func main() {
 
 	startTime := time.Now()
 
-	resultats, errors := listIP.Check(rangs, portNumber, timeout)
+	resultats, errors := listIP.Check(rangs, portNumber, parallel, timeout)
 
 	if debug {
 		outputFormat("errors", errors)
