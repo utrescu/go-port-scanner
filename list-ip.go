@@ -59,7 +59,11 @@ func main() {
 
 	startTime := time.Now()
 
-	resultats, errors := listIP.Check(rangs, portNumber, parallel, timeout)
+	resultats, errors, err := listIP.Check(rangs, portNumber, parallel, timeout)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
 
 	if debug {
 		outputFormat("errors", errors)
